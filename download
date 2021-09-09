@@ -1,14 +1,21 @@
 #!/bin/bash
 
-start_year=2009
+# Quarters in a year
 quarters=(q1 q2 q3 q4)
+# Current year
 current_year=$(date +'%Y')
 
+# Start with 2019 and iterate until the current year
 for (( year=2019; year<=current_year; year++ ))
 do
+	# Iterate over the quarters
 	for quarter in ${quarters[@]}; do
-		#curl https://www.sec.gov/files/dera/data/financial-statement-data-sets/$year$quarter.zip --output $year$quarter.zip
+		# Curl SEC website with year and quarter to
+		# download zip files and store the response code
 		response_code=$(curl -s -o $year$quarter.zip -w "%{http_code}"  https://www.sec.gov/files/dera/data/financial-statement-data-sets/$year$quarter.zip)
+		# if the response code is 404 then
+		# we have gone to a year and quarter that
+		# hasn't happened yet
 		if (( $response_code == 404 ))
 		then
 			exit 0
